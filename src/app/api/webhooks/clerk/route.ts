@@ -1,4 +1,4 @@
-import * as uuid from "uuid"
+// import * as uuid from "uuid"
 
 // import { v4 as uuidv4 } from 'uuid';
 import { createUser, deleteUser, updateUser } from "@/lib/database/actions/user.actions"
@@ -7,7 +7,7 @@ import { headers } from "next/headers"
 import { NextResponse } from "next/server"
 import { Webhook } from "svix"
 
-const uuidv4 = uuid.v4
+// const uuidv4 = uuid.v4
 
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
@@ -51,7 +51,7 @@ export async function POST(req: Request) {
 
     try {
       const user = {
-        _id: uuidv4(), // UUID for _id
+        // _id: uuidv4(), // UUID for _id
         clerkId: id,
         email: email_addresses[0].email_address,
         username: username || "",
