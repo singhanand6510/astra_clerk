@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import * as uuid from "uuid"
 import { createUser, deleteUser, updateUser } from "@/lib/database/actions/user.actions"
 import { WebhookEvent, clerkClient } from "@clerk/nextjs/server"
