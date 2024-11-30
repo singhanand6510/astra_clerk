@@ -1,38 +1,56 @@
-import mongoose from "mongoose"
-import { driver } from "stargate-mongoose"
+import { DataAPIClient } from "@datastax/astra-db-ts"
 
-interface AstraConnectOptions extends mongoose.ConnectOptions {
-  isAstra?: boolean
-  applicationToken?: string
-}
-
-export const connectToAstraDb = async (): Promise<void> => {
+export const connectToAstraDbUsingDataAPIClient = async () => {
   try {
-    // Construct the URI manually following the format:
-    // https://{ASTRA_DB_ID}-{ASTRA_DB_REGION}.apps.astra.datastax.com/{ASTRA_DB_KEYSPACE}
-    const uri = `${process.env.ASTRA_DB_REGION}/api/rest/${process.env.ASTRA_DB_KEYSPACE}`
+    // Set up endpoint and keyspace separately
+    const endpoint = process.env.ASTRA_DB_REGION
+    const namespace = process.env.ASTRA_DB_KEYSPACE
 
-    // If already connected, disconnect before reconnecting
-    if (mongoose.connection.readyState !== 0) {
-      await mongoose.disconnect()
-      console.log("Disconnected previous Mongoose connection.")
+    if (!endpoint || !namespace) {
+      throw new Error("Astra DB endpoint or keyspace is not defined in environment variables.")
     }
 
-    // Set necessary Mongoose configurations
-    mongoose.set("autoCreate", true)
-    mongoose.setDriver(driver)
+    // Initialize the client with your Astra token
+    const client = new DataAPIClient(process.env.ASTRA_DB_APPLICATION_TOKEN!)
+    const db = client.db(endpoint, { namespace })
 
-    // Establish the connection to AstraDB
-    const options: AstraConnectOptions = {
-      isAstra: true,
-      applicationToken: process.env.ASTRA_DB_APPLICATION_TOKEN,
-    }
+    // Reference the collection you want to work with
+    // const collection = db.collection("user")
 
-    await mongoose.connect(uri, options)
+    console.log("Connected to AstraDB successfully using DataAPIClient.")
 
-    console.log("Connected to AstraDB successfully.")
+    return { client, db }
   } catch (error) {
     console.error("Error connecting to AstraDB:", error)
     throw error
   }
 }
+
+// import mongoose from "mongoose"
+// import { driver, createAstraUri } from "stargate-mongoose"
+
+// export const connectToAstraDb = async (): Promise<void> => {
+//   try {
+//     const uri = createAstraUri(process.env.ASTRA_DB_REGION!, process.env.ASTRA_DB_APPLICATION_TOKEN!, process.env.ASTRA_DB_KEYSPACE!, process.env.ASTRA_DB_ID!)
+
+//     // If already connected, disconnect before reconnecting
+//     if (mongoose.connection.readyState !== 0) {
+//       await mongoose.disconnect()
+//       console.log("Disconnected previous Mongoose connection.")
+//     }
+
+//     // Set necessary Mongoose configurations
+//     mongoose.set("autoCreate", true)
+//     mongoose.setDriver(driver)
+
+//     // Establish the connection to AstraDB
+//     await mongoose.connect(uri, {
+//       isAstra: true,
+//     })
+
+//     console.log("Connected to AstraDB successfully.")
+//   } catch (error) {
+//     console.error("Error connecting to AstraDB:", error)
+//     throw error
+//   }
+// }

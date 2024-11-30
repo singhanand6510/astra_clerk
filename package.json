@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.5.1",
+    "@clerk/nextjs": "^5.2.4",
     "@datastax/astra-db-ts": "^1.5.0",
     "@types/uuid": "^10.0.0",
     "cassandra-driver": "^4.7.2",

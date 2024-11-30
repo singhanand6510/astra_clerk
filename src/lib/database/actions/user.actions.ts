@@ -2,12 +2,12 @@
 
 import { revalidatePath } from "next/cache"
 import User from "../models/user.model"
-import { connectToAstraDb } from "../mongoose"
+import { connectToAstraDbUsingDataAPIClient } from "../mongoose"
 import { handleError } from "@/lib/utils"
 
 export async function createUser(user: CreateUserParams) {
   try {
-    await connectToAstraDb()
+    await connectToAstraDbUsingDataAPIClient()
     const newUser = await User.create(user)
     return JSON.parse(JSON.stringify(newUser))
   } catch (error) {
@@ -18,7 +18,7 @@ export async function createUser(user: CreateUserParams) {
 // READ
 export async function getUserById(userId: string) {
   try {
-    await connectToAstraDb()
+    await connectToAstraDbUsingDataAPIClient()
 
     const user = await User.findOne({ clerkId: userId })
 
@@ -33,7 +33,7 @@ export async function getUserById(userId: string) {
 // UPDATE
 export async function updateUser(clerkId: string, user: UpdateUserParams) {
   try {
-    await connectToAstraDb()
+    await connectToAstraDbUsingDataAPIClient()
 
     const updatedUser = await User.findOneAndUpdate({ clerkId }, user, {
       new: true,
@@ -50,7 +50,7 @@ export async function updateUser(clerkId: string, user: UpdateUserParams) {
 // DELETE
 export async function deleteUser(clerkId: string) {
   try {
-    await connectToAstraDb()
+    await connectToAstraDbUsingDataAPIClient()
 
     // Find user to delete
     const userToDelete = await User.findOne({ clerkId })
@@ -72,7 +72,7 @@ export async function deleteUser(clerkId: string) {
 // USE CREDITS
 export async function updateCredits(userId: string, creditFee: number) {
   try {
-    await connectToAstraDb()
+    await connectToAstraDbUsingDataAPIClient()
 
     const updatedUserCredits = await User.findOneAndUpdate({ _id: userId }, { $inc: { creditBalance: creditFee } }, { new: true })
 
