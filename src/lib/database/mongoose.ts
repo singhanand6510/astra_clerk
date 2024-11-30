@@ -29,7 +29,7 @@ import { DataAPIClient } from "@datastax/astra-db-ts"
 // }
 
 /** using dataApiClient */
-export const connectToAstraDbUsingDataAPIClient = async (collectionName: string = "video") => {
+export const connectToAstraDbUsingDataAPIClient = async (collectionName: string = "users") => {
   try {
     // Set up endpoint and keyspace separately
     const endpoint = process.env.ASTRA_DB_API_END_POINT
