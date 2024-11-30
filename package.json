@@ -14,6 +14,7 @@
     "@types/uuid": "^10.0.0",
     "cassandra-driver": "^4.7.2",
     "clsx": "^2.1.1",
+    "force": "^0.0.3",
     "mongoose": "^8.8.3",
     "next": "15.0.3",
     "qs": "^6.13.1",
