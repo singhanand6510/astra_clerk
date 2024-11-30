@@ -1,54 +1,54 @@
-// import { DataAPIClient } from "@datastax/astra-db-ts"
+import { DataAPIClient } from "@datastax/astra-db-ts"
+// import mongoose from "mongoose"
+// import { driver, createAstraUri } from "stargate-mongoose"
 
-// export const connectToAstraDbUsingDataAPIClient = async () => {
+// export const connectToAstraDb = async (): Promise<void> => {
 //   try {
-//     // Set up endpoint and keyspace separately
-//     const endpoint = process.env.ASTRA_DB_REGION
-//     const namespace = process.env.ASTRA_DB_KEYSPACE
+//     const uri = createAstraUri(process.env.ASTRA_DB_REGION!, process.env.ASTRA_DB_APPLICATION_TOKEN!, process.env.ASTRA_DB_KEYSPACE!, process.env.ASTRA_DB_ID!)
 
-//     if (!endpoint || !namespace) {
-//       throw new Error("Astra DB endpoint or keyspace is not defined in environment variables.")
+//     // If already connected, disconnect before reconnecting
+//     if (mongoose.connection.readyState !== 0) {
+//       await mongoose.disconnect()
+//       console.log("Disconnected previous Mongoose connection.")
 //     }
 
-//     // Initialize the client with your Astra token
-//     const client = new DataAPIClient(process.env.ASTRA_DB_APPLICATION_TOKEN!)
-//     const db = client.db(endpoint, { namespace })
+//     // Set necessary Mongoose configurations
+//     mongoose.set("autoCreate", true)
+//     mongoose.setDriver(driver)
 
-//     // Reference the collection you want to work with
-//     // const collection = db.collection("user")
+//     // Establish the connection to AstraDB
+//     await mongoose.connect(uri, {
+//       isAstra: true,
+//     })
 
-//     console.log("Connected to AstraDB successfully using DataAPIClient.")
-
-//     return { client, db }
+//     console.log("Connected to AstraDB successfully.")
 //   } catch (error) {
 //     console.error("Error connecting to AstraDB:", error)
 //     throw error
 //   }
 // }
 
-import mongoose from "mongoose"
-import { driver, createAstraUri } from "stargate-mongoose"
-
-export const connectToAstraDb = async (): Promise<void> => {
+/** using dataApiClient */
+export const connectToAstraDbUsingDataAPIClient = async (collectionName: string = "video") => {
   try {
-    const uri = createAstraUri(process.env.ASTRA_DB_REGION!, process.env.ASTRA_DB_APPLICATION_TOKEN!, process.env.ASTRA_DB_KEYSPACE!, process.env.ASTRA_DB_ID!)
+    // Set up endpoint and keyspace separately
+    const endpoint = process.env.ASTRA_DB_API_END_POINT
+    const namespace = process.env.ASTRA_DB_KEYSPACE
 
-    // If already connected, disconnect before reconnecting
-    if (mongoose.connection.readyState !== 0) {
-      await mongoose.disconnect()
-      console.log("Disconnected previous Mongoose connection.")
+    if (!endpoint || !namespace) {
+      throw new Error("Astra DB endpoint or keyspace is not defined in environment variables.")
     }
 
-    // Set necessary Mongoose configurations
-    mongoose.set("autoCreate", true)
-    mongoose.setDriver(driver)
+    // Initialize the client with your Astra token
+    const client = new DataAPIClient(process.env.ASTRA_DB_APPLICATION_TOKEN!)
+    const db = client.db(endpoint, { namespace })
 
-    // Establish the connection to AstraDB
-    await mongoose.connect(uri, {
-      isAstra: true,
-    })
+    // Reference the specified collection
+    const collection = db.collection(collectionName)
 
-    console.log("Connected to AstraDB successfully.")
+    console.log(`Connected to AstraDB collection '${collectionName}' successfully using DataAPIClient.`)
+
+    return { client, db, collection }
   } catch (error) {
     console.error("Error connecting to AstraDB:", error)
     throw error

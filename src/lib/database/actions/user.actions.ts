@@ -1,13 +1,13 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+// import { revalidatePath } from "next/cache"
 import User from "../models/user.model"
-import { connectToAstraDb } from "../mongoose"
+import { connectToAstraDbUsingDataAPIClient } from "../mongoose"
 import { handleError } from "@/lib/utils"
 
 export async function createUser(user: CreateUserParams) {
   try {
-    await connectToAstraDb()
+    await connectToAstraDbUsingDataAPIClient()
     console.log("astraDB connection successfull")
     const newUser = await User.create(user)
     return JSON.parse(JSON.stringify(newUser))
@@ -19,7 +19,7 @@ export async function createUser(user: CreateUserParams) {
 // READ
 export async function getUserById(userId: string) {
   try {
-    await connectToAstraDb()
+    await connectToAstraDbUsingDataAPIClient()
 
     const user = await User.findOne({ clerkId: userId })
 
@@ -32,55 +32,55 @@ export async function getUserById(userId: string) {
 }
 
 // UPDATE
-export async function updateUser(clerkId: string, user: UpdateUserParams) {
-  try {
-    await connectToAstraDb()
+// export async function updateUser(clerkId: string, user: UpdateUserParams) {
+//   try {
+//     await connectToAstraDbUsingDataAPIClient()
 
-    const updatedUser = await User.findOneAndUpdate({ clerkId }, user, {
-      new: true,
-    })
+//     const updatedUser = await User.findOneAndUpdate({ clerkId }, user, {
+//       new: true,
+//     })
 
-    if (!updatedUser) throw new Error("User update failed")
+//     if (!updatedUser) throw new Error("User update failed")
 
-    return JSON.parse(JSON.stringify(updatedUser))
-  } catch (error) {
-    handleError(error)
-  }
-}
+//     return JSON.parse(JSON.stringify(updatedUser))
+//   } catch (error) {
+//     handleError(error)
+//   }
+// }
 
 // DELETE
-export async function deleteUser(clerkId: string) {
-  try {
-    await connectToAstraDb()
+// export async function deleteUser(clerkId: string) {
+//   try {
+//     await connectToAstraDbUsingDataAPIClient()
 
-    // Find user to delete
-    const userToDelete = await User.findOne({ clerkId })
+//     // Find user to delete
+//     const userToDelete = await User.findOne({ clerkId })
 
-    if (!userToDelete) {
-      throw new Error("User not found")
-    }
+//     if (!userToDelete) {
+//       throw new Error("User not found")
+//     }
 
-    // Delete user
-    const deletedUser = await User.findByIdAndDelete(userToDelete._id)
-    revalidatePath("/")
+//     // Delete user
+//     const deletedUser = await User.findByIdAndDelete(userToDelete._id)
+//     revalidatePath("/")
 
-    return deletedUser ? JSON.parse(JSON.stringify(deletedUser)) : null
-  } catch (error) {
-    handleError(error)
-  }
-}
+//     return deletedUser ? JSON.parse(JSON.stringify(deletedUser)) : null
+//   } catch (error) {
+//     handleError(error)
+//   }
+// }
 
 // USE CREDITS
-export async function updateCredits(userId: string, creditFee: number) {
-  try {
-    await connectToAstraDb()
+// export async function updateCredits(userId: string, creditFee: number) {
+//   try {
+//     await connectToAstraDbUsingDataAPIClient()
 
-    const updatedUserCredits = await User.findOneAndUpdate({ _id: userId }, { $inc: { creditBalance: creditFee } }, { new: true })
+//     const updatedUserCredits = await User.findOneAndUpdate({ _id: userId }, { $inc: { creditBalance: creditFee } }, { new: true })
 
-    if (!updatedUserCredits) throw new Error("User credits update failed")
+//     if (!updatedUserCredits) throw new Error("User credits update failed")
 
-    return JSON.parse(JSON.stringify(updatedUserCredits))
-  } catch (error) {
-    handleError(error)
-  }
-}
+//     return JSON.parse(JSON.stringify(updatedUserCredits))
+//   } catch (error) {
+//     handleError(error)
+//   }
+// }
