@@ -1,13 +1,13 @@
 /* eslint-disable no-unused-vars */
 
-import * as uuid from "uuid"
+// import * as uuid from "uuid"
 import { createUser, deleteUser, updateUser } from "@/lib/database/actions/user.actions"
 import { WebhookEvent, clerkClient } from "@clerk/nextjs/server"
 import { headers } from "next/headers"
 import { NextResponse } from "next/server"
 import { Webhook } from "svix"
 
-const uuidv4 = uuid.v4
+// const uuidv4 = uuid.v4
 
 export async function POST(req: Request) {
   // Get the webhook secret from environment variables
