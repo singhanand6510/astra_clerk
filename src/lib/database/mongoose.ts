@@ -4,7 +4,7 @@ import { driver, createAstraUri } from "stargate-mongoose"
 
 export const connectToAstraDb = async (): Promise<void> => {
   try {
-    const uri = createAstraUri(process.env.ASTRA_DB_REGION!, process.env.ASTRA_DB_APPLICATION_TOKEN!, process.env.ASTRA_DB_KEYSPACE!, process.env.ASTRA_DB_ID!)
+    const uri = createAstraUri(process.env.ASTRA_DB_API_END_POINT!, process.env.ASTRA_DB_APPLICATION_TOKEN!, process.env.ASTRA_DB_KEYSPACE!, process.env.ASTRA_DB_ID!)
 
     // If already connected, disconnect before reconnecting
     if (mongoose.connection.readyState !== 0) {
