@@ -2,12 +2,12 @@
 
 // import { revalidatePath } from "next/cache"
 import User from "../models/user.model"
-import { connectToAstraDbUsingDataAPIClient } from "../mongoose"
+import { connectToAstraDb } from "../mongoose"
 import { handleError } from "@/lib/utils"
 
 export async function createUser(user: CreateUserParams) {
   try {
-    await connectToAstraDbUsingDataAPIClient()
+    await connectToAstraDb()
     console.log("astraDB connection successfull")
     const newUser = await User.create(user)
     return JSON.parse(JSON.stringify(newUser))
@@ -19,7 +19,7 @@ export async function createUser(user: CreateUserParams) {
 // READ
 export async function getUserById(userId: string) {
   try {
-    await connectToAstraDbUsingDataAPIClient()
+    await connectToAstraDb()
 
     const user = await User.findOne({ clerkId: userId })
 
